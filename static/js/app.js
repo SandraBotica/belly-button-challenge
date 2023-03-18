@@ -9,6 +9,36 @@
 //   console.log(data);
 // });
 
+// Initialised arrays
+let metadataId = [];
+let metadatEthnicity = [];
+let metadataGender = [];
+let metadataAge = [];
+let metadataLocation = [];
+let metadataBbtype = [];
+let metadataWfreq = [];
+let sampleId = [];
+let sampleOtuIds = [];
+let sampleSampleValues = [];
+let sampleOtuLabels = [];
+
+// For loop to populate arrays
+for (let i = 0; i < data.length; i++) {
+  row = data[i];
+  metadataId = (row.metadata.id);
+  metadatEthnicity = (row.metadata.ethnicity);
+  metadataGender = (row.metadata.gender);
+  metadataAge = (row.metadata.age);
+  metadataLocation = (row.metadata.location);
+  metadataBbtype = (row.metadata.bbtype);
+  metadataWfreq = (row.metadata.wfreq);
+  sampleId.push(row.samples.id);
+  sampleOtuIds.push(row.samples.otu_ids);
+  sampleSampleValues.push(row.samples.sample_values);
+  sampleOtuLabels.push(row.samples.otu_labels);
+};
+
+
 // Sort the data by sample_values descending
 let sortedSampleValues = data.sort((a, b) => b.sample_values - a.sample_values);
 
@@ -97,3 +127,28 @@ let bubbleLayout = {
 
 Plotly.newPlot('myDiv', bubbleData, bubbleLayout);
 
+
+
+// create metadata table
+let table = {
+  type: 'table',
+  columnwidth: [300],
+  columnorder: [0],
+  header: {
+    values: "Demographic Info",
+    align: "center",
+    line: {width: 1, color: 'rgb(50, 50, 50)'},
+    fill: {color: ['rgb(0, 0, 255)']},
+    font: {family: "Arial", size: 11, color: "black"}
+  },
+  cells: {
+    values: (row.metadata),
+    align: ["left"],
+    line: {color: "black", width: 1},
+    fill: {color: ['white']},
+    font: {family: "Arial", size: 10, color: ["black"]}
+  },
+  xaxis: 'x',
+  yaxis: 'y',
+  domain: {x: [0,0.4], y: [0,1]}
+}
