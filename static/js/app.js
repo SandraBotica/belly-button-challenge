@@ -1,96 +1,167 @@
 const url = "https://2u-data-curriculum-team.s3.amazonaws.com/dataviz-classroom/v1.1/14-Interactive-Web-Visualizations/02-Homework/samples.json";
 
 // samples.json Pending
-const dataSamples = d3.json(url);
-console.log("Data Samples: ", dataSamples);
+// const dataPromise = d3.json(url);
+// console.log("Data Promise: ", dataPromise);
 
 // Fetch the JSON data and console log it
 d3.json(url).then(function(data) {
   console.log(data);
+  let metadata = data.metadata;
+  console.log(metadata);
+  let samples = data.samples;
+  console.log(samples);
+  let names = data.names;
+  console.log(names);
+}).catch(function(error) {
+  console.log(error); 
 });
 
-// Initialised arrays
-let metadataId = Object.values(data.metadata.id);
-let metadatEthnicity = Object.values(data.metadata.ethnicity);
-let metadataGender = Object.values(data.metadata.gender);
-let metadataAge = Object.values(data.metadata.age);
-let metadataLocation = Object.values(data.metadata.location);
-let metadataBbtype = Object.values(data.metadata.bbtype);
-let metadataWfreq = Object.values(data.metadata.wfreq);
-let sampleId = Object.values(data.samples.id);
-let sampleOtuIds = Object.values(data.samples.otu_ids);
-let sampleSampleValues = Object.values(data.samples.sample_values);
-let sampleOtuLabels = Object.values(data.samples.otu_labels);
 
-// For loop to populate arrays
+
+// function buildCharts(sample) {
+//   d3.json(url).then((data) => {
+//     console.log(data);
+//     let samples = data.samples;
+//     console.log(samples);
+//     let idArray = samples.filter(sampleObj => sampleObj.id == sample);
+//     let metadataArray = data.metadata.filter(sampleObj => sampleObj.id == sample);
+//     let result = resultArray[0];
+//     let metadata = metadataArray[0];
+
+
+
+
+// let metaData = data.map(data => `${data.metadata}`);
+// console.log(data['metaData']);
+
+// let metadataId = d3.select(".metadata");
+// console.log("metaData: ", metadata);
+
+// Initialised arrays
+// let metadataId = Object.values(data.metadata.id);
+// let metadatEthnicity = Object.values(data.metadata.ethnicity);
+// let metadataGender = Object.values(data.metadata.gender);
+// let metadataAge = Object.values(data.metadata.age);
+// let metadataLocation = Object.values(data.metadata.location);
+// let metadataBbtype = Object.values(data.metadata.bbtype);
+// let metadataWfreq = Object.values(data.metadata.wfreq);
+
+// let sampleId = Object.values(data.samples.id);
+// let sampleOtuIds = Object.values(data.samples.otu_ids);
+// let sampleSampleValues = Object.values(data.samples.sample_values);
+// let sampleOtuLabels = Object.values(data.samples.otu_labels);
+
+// let metadataId = [];
+// let metadatEthnicity = [];
+// let metadataGender = [];
+// let metadataAge = [];
+// let metadataLocation = [];
+// let metadataBbtype = [];
+// let metadataWfreq = [];
+// let sampleId = [];
+// let sampleOtuIds = [];
+// let sampleSampleValues = [];
+// let sampleOtuLabels = [];
+
+// // For loop to populate arrays
 // for (let i = 0; i < data.length; i++) {
 //   row = data[i];
-//   metadataId = (row.metadata.id);
-//   metadatEthnicity = (row.metadata.ethnicity);
-//   metadataGender = (row.metadata.gender);
-//   metadataAge = (row.metadata.age);
-//   metadataLocation = (row.metadata.location);
-//   metadataBbtype = (row.metadata.bbtype);
-//   metadataWfreq = (row.metadata.wfreq);
+//   // metadataId.push(row.metadata.id);
+//   // metadatEthnicity.push(row.metadata.ethnicity);
+//   // metadataGender.push(row.metadata.gender);
+//   // metadataAge.push(row.metadata.age);
+//   // metadataLocation.push(row.metadata.location);
+//   // metadataBbtype.push(row.metadata.bbtype);
+//   // metadataWfreq.push(row.metadata.wfreq);
 //   sampleId.push(row.samples.id);
 //   sampleOtuIds.push(row.samples.otu_ids);
 //   sampleSampleValues.push(row.samples.sample_values);
 //   sampleOtuLabels.push(row.samples.otu_labels);
 // };
+// console.log(row);
 
-// Sort the data by sample_values descending
-let sortedSampleValues = data.sort((a, b) => b.sample_values - a.sample_values);
 
-// Slice the first 10 objects for plotting
-slicedData = sortedSampleValues.slice(0, 10);
 
-// Reverse the array to accommodate Plotly's defaults
-reversedData = slicedData.reverse();
 
-// Display the default plot
-function init() {
-  let data = [{
-  x: sampleOtuIds,
-  y: sampleSampleValues,
-  text: sampleOtuLabels,
-  type: "bar",
-  marker: {
-    color: 'rgba(50,171,96,0.6)',
-    line: {
-      color: 'rgba(50,171,96,1.0)',
-      width: 1
-    }
-  },
-  name: "OTUs Sample Values",
-  orientation: "h"
-  }];
+// let samples = data.samples;
+// let sampleValues = samples.sample_values;
+//   console.log(sampleValues);
 
-  let layout = {
-    title: "Top 10 OTUs Sample Values",
-    legend: {
-      x: 0.029,
-      y: 1.238,
-      font: {
-        size: 10
-      }
-    },
-    margin: {
-      l: 100,
-      r: 20,
-      t: 200,
-      b: 70
-    },
-    width: 600,
-        height: 600,
-        paper_bgcolor: 'rgb(248,248,255)',
-        plot_bgcolor: 'rgb(248,248,255)'
-  };
+// let sampleValues = samples.sample_values;
+// console.log(sampleValues)[0];
 
-  Plotly.newPlot("bar", data, layout);
-}
+// let trace1 = {
+//   x: samples.sample_values[0],
+//   y: samples.otu_ids[0],
+//   type: "bar"
+// };
 
-// On change to the DOM, call getData()
-d3.selectAll("#selDataset").on("change", getData);
+// let barData = [trace1];
+// let layout = {
+//   title: "bar of sample values"
+// };
+
+// Plotly.newPlot("plot", barData, layout);
+
+
+
+
+
+
+// // Sort the data by sample_values descending
+// let sortedSampleValues = data.sort((a, b) => b.sample_values - a.sample_values);
+
+// // Slice the first 10 objects for plotting
+// slicedData = sortedSampleValues.slice(0, 10);
+
+// // Reverse the array to accommodate Plotly's defaults
+// reversedData = slicedData.reverse();
+
+// // Display the default plot
+// function init() {
+//   let data = [{
+//   x: sampleOtuIds,
+//   y: sampleSampleValues,
+//   text: sampleOtuLabels,
+//   type: "bar",
+//   marker: {
+//     color: 'rgba(50,171,96,0.6)',
+//     line: {
+//       color: 'rgba(50,171,96,1.0)',
+//       width: 1
+//     }
+//   },
+//   name: "OTUs Sample Values",
+//   orientation: "h"
+//   }];
+
+//   let layout = {
+//     title: "Top 10 OTUs Sample Values",
+//     legend: {
+//       x: 0.029,
+//       y: 1.238,
+//       font: {
+//         size: 10
+//       }
+//     },
+//     margin: {
+//       l: 100,
+//       r: 20,
+//       t: 200,
+//       b: 70
+//     },
+//     width: 600,
+//         height: 600,
+//         paper_bgcolor: 'rgb(248,248,255)',
+//         plot_bgcolor: 'rgb(248,248,255)'
+//   };
+
+//   Plotly.newPlot("bar", data, layout);
+// }
+
+// // On change to the DOM, call getData()
+// d3.selectAll("#selDataset").on("change", getData);
 
 // see activity 10 lesson 3 of 14-Interactive_Visualisation
 
