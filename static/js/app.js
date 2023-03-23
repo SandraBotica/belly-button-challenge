@@ -17,26 +17,68 @@ d3.json(url).then(function(data) {
   console.log(error); 
 });
 
-
-
-// function buildCharts(sample) {
+// function buildTable(sampleId) {
 //   d3.json(url).then((data) => {
-//     console.log(data);
-//     let samples = data.samples;
-//     console.log(samples);
-//     let idArray = samples.filter(sampleObj => sampleObj.id == sample);
-//     let metadataArray = data.metadata.filter(sampleObj => sampleObj.id == sample);
-//     let result = resultArray[0];
-//     let metadata = metadataArray[0];
+//     console.log('data; ', data);
+//     let metadata = data.metadata;
+//     console.log('metadata: ', metadata);
+//     let metadataArray = data.metadata.filter(metadataObj => metadataObj.id == sampleId);
+//     let metadataTable = metadataArray[0];
+
+//   })
+
+// };
+function buildPlots(sampleId) {
+  d3.json(url).then((data) => {
+    console.log(data);
+    let samples = data.samples;
+    console.log(samples);
+    // let samplesArray = samples.filter(sampleObj => sampleObj.id == sampleId);
+    // let metadataArray = data.metadata.filter(sampleObj => sampleObj.id == sampleId);
+    // let result = samples[0];
+    // let metadataPlot = metadataArray[0];
+    let sample = samples[0];
+    console.log(sample);
+    let otuLabels = sample.otu_labels
+    let otuIds = sample.otu_ids
+    let sampleValues = sample.sample_values
+    // // Sort the data by sample_values descending
+    // let sortedSampleValues = sampleValues.sort((a, b) => b.sample_values - a.sample_values);
+    // // Slice the first 10 objects for plotting
+    // slicedData = sortedSampleValues.slice(0, 10);
+
+    let trace1 = {
+      x: otuIds,
+      y: sampleValues,
+      text: otuLabels,
+      type: "bar",
+      orientation: 'h'
+    };
+
+    let barData = [trace1];
+    let layout = {
+      title: "bar of sample values"
+    };
+
+    Plotly.newPlot("plot", barData, layout);
+
+  })
+
+};
+
+function init() {
+ 
+};
+
+function optionChanged(sampleId){
+ buildPlots(sampleId)
+};
+
+init();
 
 
 
 
-// let metaData = data.map(data => `${data.metadata}`);
-// console.log(data['metaData']);
-
-// let metadataId = d3.select(".metadata");
-// console.log("metaData: ", metadata);
 
 // Initialised arrays
 // let metadataId = Object.values(data.metadata.id);
@@ -84,12 +126,6 @@ d3.json(url).then(function(data) {
 
 
 
-// let samples = data.samples;
-// let sampleValues = samples.sample_values;
-//   console.log(sampleValues);
-
-// let sampleValues = samples.sample_values;
-// console.log(sampleValues)[0];
 
 // let trace1 = {
 //   x: samples.sample_values[0],
