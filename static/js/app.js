@@ -19,49 +19,62 @@ d3.json(url).then(function (data) {
 
 function init() {
 
+  //  Use D3 to select the dropdown menu element
+  let dropdownMenu = d3.select("#selDataset");
+
   d3.json(url).then(function (data) {
     // console.log(data);
 
     let names = data.names;
     // console.log(names);
 
-    //  Use D3 to select the dropdown menu element
-    let dropdownMenu = d3.select("#selDataset");
-    // Select the buttons and use D3 `.on` to attach a change handler
-    d3.select("#selDataset")
-      .selectAll('myOptions')
-      .data(names)
-      .enter()
-      .append('option')
-      .text(function (sampleId) { return sampleId; })
-      .attr("value", function (sampleId) { return sampleId; })
-
-
-    let optionChanged = dropdownMenu.property("on change");
-
-    // function optionChanged(sampleId){
-    //   buildTable(sampleId);
-    //   drawBarChart(sampleId);
-    //   drawBubbleChart(sampleId);
-    // }
-
-    // Build the sample Metadata Table
-    function buildTable(sampleId) {
-      d3.json(url).then((data) => {
-        let metadataArray = data.metadata;
-        let metadata = data.metadataArray.filter(sample => sample.id == sampleId);
-        // let metadataTable = d3.select("#sample-metadata.panel-body").onchange("optionChanged(this.value)", getData);
-        let metadataTable = d3.select("#sample-metadata");
-        displayDemoHTML.html("");
-        for(const [key, value] of Object.entries(metadata[0])){
-          displayDemoHTML.append('p').text(`${key}: ${value}`);
-        }
-      })
+    for (let i = 0; i < names.length; i++) {
+    dropdownMenu
+      .append("option")
+        .text(names[i])
+        .property("value", names[i]);
     };
-  }).catch(function (error) {
-    console.log(error);
-  });
-} init();
+    // Select the buttons and use D3 `.on` to attach a change handler
+    // d3.select("#selDataset")
+    //   .selectAll('myOptions')
+    //   .data(names)
+    //   .enter()
+    //   .append('option')
+    //   .text(function (sampleId) { return sampleId; })
+    //   .attr("value", function (sampleId) { return sampleId; })
+    firstName = names[0];
+
+    buildTable(firstName);
+  })
+}
+// init();
+
+
+function optionChanged(sampleId) {
+  buildTable(sampleId);
+  // drawBarChart(sampleId);
+  // drawBubbleChart(sampleId);
+};
+
+// Build the sample Metadata Table
+function buildTable(sampleId) {
+  d3.json(url).then((data) => {
+    let metadataArray = data.metadata;
+    let metadata = metadataArray.filter(sample => sample.id == sampleId);
+    let firstElement = metadata[0];
+    let PANEL = d3.select("#sample-metadata")
+    PANEL.html("");
+    // let metadataTable = d3.select("#sample-metadata.panel-body").onchange("optionChanged(this.value)", getData);
+    for (key in firstElement) {
+      PANEL.append("h6").text(`${key.toUpperCase()}: ${firstElement[key]}`);
+    };
+  })
+};
+//   .catch (function (error) {
+//   console.log(error);
+// });
+// } 
+init();
 
 
 
@@ -443,4 +456,4 @@ function init() {
 //   xaxis: 'x',
 //   yaxis: 'y',
 //   domain: {x: [0,0.4], y: [0,1]}
-// }
+// 
