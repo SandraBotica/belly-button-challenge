@@ -7,12 +7,12 @@ const url = "https://2u-data-curriculum-team.s3.amazonaws.com/dataviz-classroom/
 // Fetch the JSON data and console log it
 d3.json(url).then(function (data) {
   console.log(data);
-  let metadata = data.metadata;
-  console.log(metadata);
-  let samples = data.samples;
-  console.log(samples);
-  let names = data.names;
-  console.log(names);
+  // let metadata = data.metadata;
+  // console.log(metadata);
+  // let samples = data.samples;
+  // console.log(samples);
+  // let names = data.names;
+  // console.log(names);
 }).catch(function (error) {
   console.log(error);
 });
@@ -20,37 +20,42 @@ d3.json(url).then(function (data) {
 function init() {
 
   d3.json(url).then(function (data) {
-    console.log(data);
+    // console.log(data);
 
     let names = data.names;
-    console.log(names);
+    // console.log(names);
 
     //  Use D3 to select the dropdown menu element
     let dropdownMenu = d3.select("#selDataset");
-
-    for (let i = 0; i < names.length; i++) {
-      console.log(names[0]);
-
-      // Select the buttons and use D3 `.on` to attach a change handler
-      // Question? Should #selDataset be ("onchange")
-      d3.selectAll("#selDataset").on("change", function () {
-        // Create a variable for the button selected
-        let button = d3.select(this);
-        // Create a variable to hold the change of value
-        // Question? Should value be the id...onchange
-        let sampleId = parseInt(button.attr('value'));
-        // Create a variable to hold the current change of value
-        let currentdropdownMenu = paresInt(dropdownMenu.text());
-        // Update the dropdownMenu value
-        currentdropdownMenu += sampleId;
-        // Set the dropdownMenu text to the new value
-        dropdownMenu.text(currentdropdownMenu);
+    // Select the buttons and use D3 `.on` to attach a change handler
+    d3.select("#selDataset")
+      .selectAll('myOptions')
+      .data(names)
+      .enter()
+      .append('option')
+      .text(function (sampleId) { return sampleId; })
+      .attr("value", function (sampleId) { return sampleId; })
 
 
-        // sampleId.append("option")
-        // sampleId.text(sampleId[i])
-        // sampleId.property("value", sampleId[i]);
+    let optionChanged = dropdownMenu.property("on change");
 
+    // function optionChanged(sampleId){
+    //   buildTable(sampleId);
+    //   drawBarChart(sampleId);
+    //   drawBubbleChart(sampleId);
+    // }
+
+    // Build the sample Metadata Table
+    function buildTable(sampleId) {
+      d3.json(url).then((data) => {
+        let metadataArray = data.metadata;
+        let metadata = data.metadataArray.filter(sample => sample.id == sampleId);
+        // let metadataTable = d3.select("#sample-metadata.panel-body").onchange("optionChanged(this.value)", getData);
+        let metadataTable = d3.select("#sample-metadata");
+        displayDemoHTML.html("");
+        for(const [key, value] of Object.entries(metadata[0])){
+          displayDemoHTML.append('p').text(`${key}: ${value}`);
+        }
       })
     };
   }).catch(function (error) {
@@ -58,41 +63,8 @@ function init() {
   });
 } init();
 
-    // sampleId = names[0]
 
-    // // This function is called when the dropdown menu item is selected
-    // function updateId(sampleId) {
-    //   // Use D3 to select the dropdown menu
-    //   let dropdownMenu = d3.select("#selDataset");
-    //   // Assign the value of the dropdown menu option to a variable
-    //   let dataset = dropdownMenu.property("value");
-    //   // Select a sample id
-    //   let sampleId = names[0];
 
-    // for (let i = 0; i < sampleId.length; i++) {
-    //   d3.selectAll("#selDataset").on("change", updateId);
-    //   sampleId.append("option")
-    //   sampleId.text(sampleId[i])
-    //   sampleId.property("value", sampleId[i]);
-    // };
-
-//   }.catch (function (error) {
-//   console.log(error);
-// }); init();
-
-// function init() {
-// // Call updateId() when a change takes place to the DOM
-// d3.selectAll("#selDataset").on("change", updateId);
-// // d3.select("#selDataset").onchange("optionChanged(this.value)", getData);
-
-// // This function is called when a dropdown menu item is selected
-// function updateId() {
-//   // Use D3 to select the dropdown menu
-//   let dropdownMenu = d3.select("#selDataset");
-//   // Assign the value of the dropdown menu option to a variable
-//   let dataset = dropdownMenu.property("value");
-//   // Select a sample id
-//   let sampleId = data.names[0];
 
 //   for (let i = 0; i < sampleId.length; i++){
 //     // selector
@@ -104,18 +76,6 @@ function init() {
 // init();
 
 
-
-
-  // // Build the sample Metadata Table
-  // function buildTable(sampleId) {
-  //   d3.json(url).then((data) => {
-  //     // console.log('data; ', data);
-  //     let metadata = data.metadata;
-  //     // console.log('metadata: ', metadata);
-  //     let metadataArray = data.metadata.filter(metadataObj => metadataObj.id == sampleId);
-  //     let metadataTable = metadataArray[0];
-  //   })
-  // };
 
 // function buildPlots(sampleId) {
 //   d3.json(url).then((data) => {
