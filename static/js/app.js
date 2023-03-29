@@ -32,6 +32,7 @@ function init() {
     };
     firstName = names[0];
     buildTable(firstName);
+    drawBarChart(firstName);
   })
 }
 // init();
@@ -43,6 +44,7 @@ function optionChanged(sampleId) {
   // drawBubbleChart(sampleId);
 };
 
+let bar = d3.select("#bar");
 
 function drawBarChart(sampleId) {
   d3.json(url).then((data) => {
@@ -63,16 +65,32 @@ function drawBarChart(sampleId) {
       y: slicedData,
       text: otuLabels,
       type: "bar",
-      orientation: 'h'
-    }];
+      orientation: 'h',
+      // margin: {
+      //   l: 100,
+      //   r: 20,
+      //   t: 200,
+      //   b: 70
+      // },
+      // width: 600,
+      // height: 600,
+      // paper_bgcolor: 'rgb(248,248,255)',
+      // plot_bgcolor: 'rgb(248,248,255)',
+      // marker: {
+      //   color: 'rgba(50,171,96,0.6)',
+      //   line: {
+      //     color: 'rgba(50,171,96,1.0)',
+      //     width: 1
+      //   }}
+      }];
     let barData = [trace1];
     let barlayout = {
       title: "Bar Graph of OTU-Ids 10 Largest Sample Values"
     };
-    
+
     d3.select("#bar");
 
-    Plotly.newPlot("plot", barData, barlayout);
+    Plotly.newPlot("bar", barData, barlayout);
   })
 };
 
@@ -95,45 +113,6 @@ init();
 
 
 
-
-
-
-
-
-
-// function buildPlots(sampleId) {
-//   d3.json(url).then((data) => {
-//     console.log(data);
-//     let samples = data.samples;
-//     console.log(samples);
-//     // let samplesArray = samples.filter(sampleObj => sampleObj.id == sampleId);
-//     // let metadataArray = data.metadata.filter(sampleObj => sampleObj.id == sampleId);
-//     // let result = samples[0];
-//     // let metadataPlot = metadataArray[0];
-//     let sample = samples[0];
-//     console.log(sample);
-//     let otuLabels = sample.otu_labels
-//     let otuIds = sample.otu_ids
-//     let sampleValues = sample.sample_values
-//     // // Sort the data by sample_values descending
-//     let sortedSampleValues = sampleValues.sort((a, b) => b.sample_values - a.sample_values);
-//     // // Slice the first 10 objects for plotting
-//     slicedData = sortedSampleValues.slice(0, 10);
-
-//     // Bar chart
-//     let trace1 = [{
-//       x: otuIds,
-//       y: slicedData,
-//       text: otuLabels,
-//       type: "bar",
-//       orientation: 'h'
-//     }];
-//     let barData = [trace1];
-//     let barlayout = {
-//       title: "bar of sample values"
-//     };
-
-//     Plotly.newPlot("plot", barData, barlayout);
 
 //     // Bubble chart
 //     let desired_maximum_marker_size = 40;
@@ -165,7 +144,7 @@ init();
 //   })
 // };
 
-// // function init() {
+
 //   // On change to the DOM, call getData()
 // d3.select("#selDataset").onchange("optionChanged(this.value)", getData);
 // d3.select("#sample-metadata.panel-body").onchange("optionChanged(this.value)", getData);
@@ -182,127 +161,10 @@ init();
 
 
 
-// let trace1 = {
-//   x: samples.sample_values[0],
-//   y: samples.otu_ids[0],
-//   type: "bar"
-// };
-
-// let barData = [trace1];
-// let layout = {
-//   title: "bar of sample values"
-// };
-
-// Plotly.newPlot("plot", barData, layout);
-
-
-
-
-
-
-// // Sort the data by sample_values descending
-// let sortedSampleValues = data.sort((a, b) => b.sample_values - a.sample_values);
-
-// // Slice the first 10 objects for plotting
-// slicedData = sortedSampleValues.slice(0, 10);
-
-// // Reverse the array to accommodate Plotly's defaults
-// reversedData = slicedData.reverse();
-
-// // Display the default plot
-// function init() {
-//   let data = [{
-//   x: sampleOtuIds,
-//   y: sampleSampleValues,
-//   text: sampleOtuLabels,
-//   type: "bar",
-//   marker: {
-//     color: 'rgba(50,171,96,0.6)',
-//     line: {
-//       color: 'rgba(50,171,96,1.0)',
-//       width: 1
-//     }
-//   },
-//   name: "OTUs Sample Values",
-//   orientation: "h"
-//   }];
-
-//   let layout = {
-//     title: "Top 10 OTUs Sample Values",
-//     legend: {
-//       x: 0.029,
-//       y: 1.238,
-//       font: {
-//         size: 10
-//       }
-//     },
-//     margin: {
-//       l: 100,
-//       r: 20,
-//       t: 200,
-//       b: 70
-//     },
-//     width: 600,
-//         height: 600,
-//         paper_bgcolor: 'rgb(248,248,255)',
-//         plot_bgcolor: 'rgb(248,248,255)'
-//   };
-
-//   Plotly.newPlot("bar", data, layout);
-// }
-
-
 
 // see activity 10 lesson 3 of 14-Interactive_Visualisation
 
 
-// // Trace1 for the sample_values Data
-// let trace1 = {
-//   x: reversedData.map(object => object.sample_values),
-//   y: reversedData.map(object => object.otu_ids),
-//   text: reversedData.map(object => object.otu_labels),
-//   type: "bar",
-//   marker: {
-//     color: 'rgba(50,171,96,0.6)',
-//     line: {
-//       color: 'rgba(50,171,96,1.0)',
-//       width: 1
-//     }
-//   },
-//   name: "OTUs Sample Values",
-//   orientation: "h"
-// };
-
-// // Data array
-// // `data` has already been defined, so we must choose a new name here:
-// let traceData = [trace1];
-
-// // Apply a title to the layout
-// let layout = {
-//   title: "Top 10 OTUs Sample Values",
-//   legend: {
-//     x: 0.029,
-//     y: 1.238,
-//     font: {
-//       size: 10
-//     }
-//   },
-//   margin: {
-//     l: 100,
-//     r: 20,
-//     t: 200,
-//     b: 70
-//   },
-//   width: 600,
-//       height: 600,
-//       paper_bgcolor: 'rgb(248,248,255)',
-//       plot_bgcolor: 'rgb(248,248,255)'
-// };
-
-// // Render the plot to the div tag with id "plot"
-// // Note that we use `traceData` here, not `data`
-// Plotly.newPlot("plot", traceData, layout);
-// Plotly.newPlot("plot", [trace1], layout);
 
 
 // // Bubble chart
