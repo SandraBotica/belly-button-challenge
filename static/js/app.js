@@ -1,9 +1,5 @@
 const url = "https://2u-data-curriculum-team.s3.amazonaws.com/dataviz-classroom/v1.1/14-Interactive-Web-Visualizations/02-Homework/samples.json";
 
-// samples.json Pending
-// const dataPromise = d3.json(url);
-// console.log("Data Promise: ", dataPromise);
-
 // Fetch the JSON data and console log it
 d3.json(url).then(function (data) {
   console.log(data);
@@ -29,21 +25,12 @@ function init() {
     // console.log(names);
 
     for (let i = 0; i < names.length; i++) {
-    dropdownMenu
-      .append("option")
+      dropdownMenu
+        .append("option")
         .text(names[i])
         .property("value", names[i]);
     };
-    // Select the buttons and use D3 `.on` to attach a change handler
-    // d3.select("#selDataset")
-    //   .selectAll('myOptions')
-    //   .data(names)
-    //   .enter()
-    //   .append('option')
-    //   .text(function (sampleId) { return sampleId; })
-    //   .attr("value", function (sampleId) { return sampleId; })
     firstName = names[0];
-
     buildTable(firstName);
   })
 }
@@ -52,9 +39,43 @@ function init() {
 
 function optionChanged(sampleId) {
   buildTable(sampleId);
-  // drawBarChart(sampleId);
+  drawBarChart(sampleId);
   // drawBubbleChart(sampleId);
 };
+
+
+function drawBarChart(sampleId) {
+  d3.json(url).then((data) => {
+    let samplesArray = data.samples;
+    let samples = samplesArray.filter(sample => sample.id == sampleId);
+    let firstSample = samples[0];
+    let otuLabels = firstSample.otu_labels;
+    let otuIds = firstSample.otu_ids;
+    let sampleValues = firstSample.sample_values;
+    // // Sort the data by sample_values descending
+    let sortedSampleValues = sampleValues.sort((a, b) => b.sample_values - a.sample_values);
+    // // Slice the first 10 objects for plotting
+    slicedData = sortedSampleValues.slice(0, 10);
+
+    // Bar chart
+    let trace1 = [{
+      x: otuIds,
+      y: slicedData,
+      text: otuLabels,
+      type: "bar",
+      orientation: 'h'
+    }];
+    let barData = [trace1];
+    let barlayout = {
+      title: "Bar Graph of OTU-Ids 10 Largest Sample Values"
+    };
+    
+    d3.select("#bar");
+
+    Plotly.newPlot("plot", barData, barlayout);
+  })
+};
+
 
 // Build the sample Metadata Table
 function buildTable(sampleId) {
@@ -64,29 +85,19 @@ function buildTable(sampleId) {
     let firstElement = metadata[0];
     let PANEL = d3.select("#sample-metadata")
     PANEL.html("");
-    // let metadataTable = d3.select("#sample-metadata.panel-body").onchange("optionChanged(this.value)", getData);
     for (key in firstElement) {
       PANEL.append("h6").text(`${key.toUpperCase()}: ${firstElement[key]}`);
     };
   })
 };
-//   .catch (function (error) {
-//   console.log(error);
-// });
-// } 
+
 init();
 
 
 
 
-//   for (let i = 0; i < sampleId.length; i++){
-//     // selector
-//       .append("option")
-//       .text(sampleId[i])
-//       .property("value", sampleNames[i]);
-//   };
-// }}
-// init();
+
+
 
 
 
@@ -168,114 +179,6 @@ init();
 //     // counter.text(currentIdNo);
 // // })
 // // };
-
-// function optionChanged(sampleId){
-
-//     // buildTable(sampleId);
-//     // buildPlots(sampleId),
-
-//   let dropdownMenu = d3.select("#selDataset");
-//   let data = dropdownMenu.property("on change");
-
-//   let metadataId = [];
-//   let metadatEthnicity = [];
-//   let metadataGender = [];
-//   let metadataAge = [];
-//   let metadataLocation = [];
-//   let metadataBbtype = [];
-//   let metadataWfreq = [];
-//   let sampleId = [];
-//   let sampleOtuIds = [];
-//   let sampleSampleValues = [];
-//   let sampleOtuLabels = [];
-
-//   // For loop to populate arrays
-//   for (let i = 0; i < data.length; i++) {
-//     row = data[i];
-//     metadataId.push(row.metadata.id);
-//     metadatEthnicity.push(row.metadata.ethnicity);
-//     metadataGender.push(row.metadata.gender);
-//     metadataAge.push(row.metadata.age);
-//     metadataLocation.push(row.metadata.location);
-//     metadataBbtype.push(row.metadata.bbtype);
-//     metadataWfreq.push(row.metadata.wfreq);
-//     sampleId.push(row.samples.id);
-//     sampleOtuIds.push(row.samples.otu_ids);
-//     sampleSampleValues.push(row.samples.sample_values);
-//     sampleOtuLabels.push(row.samples.otu_labels);
-//   };
-//   // console.log(row);
-
-//   if (data === sampleId){ 
-//     // buildTable(sampleId)
-//     // buildPlots(sampleId)
-//   }
-
-// d3.select("#sample-metadata.panel-body").html("");
-// // not sure how to call change to table
-// d3.select("#bar").html("");
-// Plotly.restyle("bar","x", [x]);
-// Plotly.restyle("bar","y", [y]);
-// Plotly.restyle("bar","text", [text]);
-// d3.select("#bubble").html("");
-// Plotly.restyle("bubble","x", [x]);
-// Plotly.restyle("bubble","y", [y]);
-// Plotly.restyle("bubble","text", [text]);
-// }};
-
-// init();
-
-
-
-
-
-
-
-
-// Initialised arrays
-// let metadataId = Object.values(data.metadata.id);
-// let metadatEthnicity = Object.values(data.metadata.ethnicity);
-// let metadataGender = Object.values(data.metadata.gender);
-// let metadataAge = Object.values(data.metadata.age);
-// let metadataLocation = Object.values(data.metadata.location);
-// let metadataBbtype = Object.values(data.metadata.bbtype);
-// let metadataWfreq = Object.values(data.metadata.wfreq);
-
-// let sampleId = Object.values(data.samples.id);
-// let sampleOtuIds = Object.values(data.samples.otu_ids);
-// let sampleSampleValues = Object.values(data.samples.sample_values);
-// let sampleOtuLabels = Object.values(data.samples.otu_labels);
-
-// let metadataId = [];
-// let metadatEthnicity = [];
-// let metadataGender = [];
-// let metadataAge = [];
-// let metadataLocation = [];
-// let metadataBbtype = [];
-// let metadataWfreq = [];
-// let sampleId = [];
-// let sampleOtuIds = [];
-// let sampleSampleValues = [];
-// let sampleOtuLabels = [];
-
-// // For loop to populate arrays
-// for (let i = 0; i < data.length; i++) {
-//   row = data[i];
-//   // metadataId.push(row.metadata.id);
-//   // metadatEthnicity.push(row.metadata.ethnicity);
-//   // metadataGender.push(row.metadata.gender);
-//   // metadataAge.push(row.metadata.age);
-//   // metadataLocation.push(row.metadata.location);
-//   // metadataBbtype.push(row.metadata.bbtype);
-//   // metadataWfreq.push(row.metadata.wfreq);
-//   sampleId.push(row.samples.id);
-//   sampleOtuIds.push(row.samples.otu_ids);
-//   sampleSampleValues.push(row.samples.sample_values);
-//   sampleOtuLabels.push(row.samples.otu_labels);
-// };
-// console.log(row);
-
-
 
 
 
@@ -432,28 +335,3 @@ init();
 
 // Plotly.newPlot('myDiv', bubbleData, bubbleLayout);
 
-
-
-// // create metadata table
-// let table = {
-//   type: 'table',
-//   columnwidth: [300],
-//   columnorder: [0],
-//   header: {
-//     values: "Demographic Info",
-//     align: "center",
-//     line: {width: 1, color: 'rgb(50, 50, 50)'},
-//     fill: {color: ['rgb(0, 0, 255)']},
-//     font: {family: "Arial", size: 11, color: "black"}
-//   },
-//   cells: {
-//     values: (row.metadata),
-//     align: ["left"],
-//     line: {color: "black", width: 1},
-//     fill: {color: ['white']},
-//     font: {family: "Arial", size: 10, color: ["black"]}
-//   },
-//   xaxis: 'x',
-//   yaxis: 'y',
-//   domain: {x: [0,0.4], y: [0,1]}
-// 
