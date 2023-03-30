@@ -35,8 +35,6 @@ function init() {
     drawBarChart(firstName);
   })
 }
-// init();
-
 
 function optionChanged(sampleId) {
   buildTable(sampleId);
@@ -50,47 +48,58 @@ function drawBarChart(sampleId) {
   d3.json(url).then((data) => {
     let samplesArray = data.samples;
     let samples = samplesArray.filter(sample => sample.id == sampleId);
+    // console.log(samples)
     let firstSample = samples[0];
+    console.log(firstSample);
     let otuLabels = firstSample.otu_labels;
-    let otuIds = firstSample.otu_ids;
+    // console.log(otuLabels)
+    let otu_ids = firstSample.otu_ids;
+    // console.log(otuIds)
     let sampleValues = firstSample.sample_values;
-    // // Sort the data by sample_values descending
-    let sortedSampleValues = sampleValues.sort((a, b) => b.sample_values - a.sample_values);
+    // console.log(sampleValues)
+    // Sort the sample_values descending and slice the first 0 objects for plotting
+    // let sampleValues = firstSample.sample_values.sort((a, b) => b.sample_values - a.sample_values).slice(0,10).reverse();
+    // console.log(sampleValues)
+    let sortedSampleValues = otu_ids.slice(0,10).map(otuIds =>`otu_id ${otuIds}`).reverse();
+    // console.log(sortedSampleValues)
+    // let sortedSampleValues = sampleValues.sort((a, b) => b.sample_values - a.sample_values);
+    // console.log(sortedSampleValues)
     // // Slice the first 10 objects for plotting
-    slicedData = sortedSampleValues.slice(0, 10);
+    // slicedData = sortedSampleValues.slice(0, 10);
+    // console.log(slicedData)
 
     // Bar chart
-    let trace1 = [{
-      x: otuIds,
-      y: slicedData,
-      text: otuLabels,
+    let barData = [{
+      x: sampleValues.slice(0,10).reverse(),
+      y: sortedSampleValues,
+      // text: sortedSampleValues,
+      text: otuLabels.slice(0,10).reverse(),
       type: "bar",
       orientation: 'h',
-      // margin: {
-      //   l: 100,
-      //   r: 20,
-      //   t: 200,
-      //   b: 70
-      // },
-      // width: 600,
-      // height: 600,
-      // paper_bgcolor: 'rgb(248,248,255)',
-      // plot_bgcolor: 'rgb(248,248,255)',
-      // marker: {
-      //   color: 'rgba(50,171,96,0.6)',
-      //   line: {
-      //     color: 'rgba(50,171,96,1.0)',
-      //     width: 1
-      //   }}
+      margin: {
+        l: 100,
+        r: 20,
+        t: 200,
+        b: 70
+      },
+      paper_bgcolor: 'rgb(248,248,255)',
+      plot_bgcolor: 'rgb(248,248,255)',
+      marker: {
+        color: 'rgba(50,171,96,0.6)',
+        line: {
+          color: 'rgba(50,171,96,1.0)',
+          width: 1
+        }}
       }];
-    let barData = [trace1];
     let barlayout = {
       title: "Bar Graph of OTU-Ids 10 Largest Sample Values"
     };
 
-    d3.select("#bar");
+    // let bar = d3.select("#bar");
 
     Plotly.newPlot("bar", barData, barlayout);
+
+
   })
 };
 
