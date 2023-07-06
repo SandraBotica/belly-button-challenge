@@ -32,19 +32,20 @@ function init() {
     };
     firstName = names[0];
     buildTable(firstName);
-    drawBarChart(firstName);
+    drawChart(firstName);
   })
 }
 
 function optionChanged(sampleId) {
   buildTable(sampleId);
-  drawBarChart(sampleId);
+  drawChart(sampleId);
   // drawBubbleChart(sampleId);
 };
 
 let bar = d3.select("#bar");
+// let bubble =  d3.select("#bubble");
 
-function drawBarChart(sampleId) {
+function drawChart(sampleId) {
   d3.json(url).then((data) => {
     let samplesArray = data.samples;
     let samples = samplesArray.filter(sample => sample.id == sampleId);
@@ -60,7 +61,7 @@ function drawBarChart(sampleId) {
     // Sort the sample_values descending and slice the first 0 objects for plotting
     // let sampleValues = firstSample.sample_values.sort((a, b) => b.sample_values - a.sample_values).slice(0,10).reverse();
     // console.log(sampleValues)
-    let sortedSampleValues = otu_ids.slice(0,10).map(otuIds =>`otu_id ${otuIds}`).reverse();
+    let sortedSampleValues = otu_ids.slice(0, 10).map(otuIds => `otu_id ${otuIds}`).reverse();
     // console.log(sortedSampleValues)
     // let sortedSampleValues = sampleValues.sort((a, b) => b.sample_values - a.sample_values);
     // console.log(sortedSampleValues)
@@ -70,10 +71,10 @@ function drawBarChart(sampleId) {
 
     // Bar chart
     let barData = [{
-      x: sampleValues.slice(0,10).reverse(),
+      x: sampleValues.slice(0, 10).reverse(),
       y: sortedSampleValues,
       // text: sortedSampleValues,
-      text: otuLabels.slice(0,10).reverse(),
+      text: otuLabels.slice(0, 10).reverse(),
       type: "bar",
       orientation: 'h',
       margin: {
@@ -89,14 +90,39 @@ function drawBarChart(sampleId) {
         line: {
           color: 'rgba(50,171,96,1.0)',
           width: 1
-        }}
-      }];
+        }
+      }
+    }];
     let barlayout = {
       title: "Bar Graph of OTU-Ids 10 Largest Sample Values"
     };
 
-    // let bar = d3.select("#bar");
+    // // Bubble chart
+    // let desired_maximum_marker_size = 40;
+    // let size = [];
+    // let bubbleData = [{
+    //   x: otu_ids,
+    //   y: sampleValues,
+    //   text: otuLabels,
+    //   // text: ['A</br>size: 40</br>sixeref: 1.25', 'B</br>size: 60</br>sixeref: 1.25', 'C</br>size: 80</br>sixeref: 1.25', 'D</br>size: 100</br>sixeref: 1.25'],
+    //   mode: 'markers',
+    //   marker: {
+    //     size: size,
+    //     //set 'sizeref' to an 'ideal' size given by the formula sizeref = 2. * max(array_of_size_values) / (desired_maximum_marker_size ** 2)
+    //     sizeref: 2.0 * Math.max(sampleValues) / (desired_maximum_marker_size ** 2),
+    //     sizemode: 'area',
+    //     color: otu_ids
+    //     // color: ['rgb(93, 164, 214)', 'rgb(255, 144, 14)',  'rgb(44, 160, 101)', 'rgb(255, 65, 54)']
+    //   }
+    // }];
+    // let bubbleLayout = {
+    //   title: `Bubble Chart of Sample Values for OTU_id: ${otuIds}`,
+    //   showlegend: false,
+    //   height: 600,
+    //   width: 600
+    // };
 
+    // Plotly.newPlot('myDiv', bubbleData, bubbleLayout);
     Plotly.newPlot("bar", barData, barlayout);
 
 
